@@ -1,0 +1,35 @@
+{
+  "name": "devtrackacademy-certificate-claim",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "import:students": "node scripts/import-students.mjs",
+    "preview:certificate": "node scripts/preview-certificate.mjs",
+    "optimize:assets": "node scripts/optimize-assets.mjs",
+    "reset:claim": "node scripts/reset-claim.mjs"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.1.5",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "lucide-react": "^0.468.0",
+    "next": "^15.1.7",
+    "qrcode": "^1.5.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "esbuild": "^0.28.2",
+    "pdf-to-img": "^7.0.0",
+    "sharp": "^0.35.4",
+    "typescript": "^5.7.2"
+  }
+}
