@@ -15,11 +15,14 @@ import {
   Layers3,
   Loader2,
   LogOut,
+  MessagesSquare,
   ShieldCheck,
   Wrench,
 } from "lucide-react";
 import { SiteHeader } from "../components/site-chrome";
 import type { MeResponse } from "../../lib/types";
+import { SOCIALS } from "../../lib/socials";
+import { SocialIcon } from "../components/social-icons";
 
 function formatDate(value: string) {
   const date = new Date(`${value}T00:00:00Z`);
@@ -251,6 +254,31 @@ export default function Dashboard() {
             </div>
           </section>
         )}
+
+        <section className="socials-card card-brut">
+          <div>
+            <div className="benefit-icon">
+              <MessagesSquare size={28} />
+            </div>
+            <p className="section-kicker">STAY CONNECTED</p>
+            <h2>Join the community</h2>
+            <p>Workshop announcements, doubt-solving, and the next batch of student perks land here first.</p>
+          </div>
+          <div className="social-list">
+            {SOCIALS.map((social) => (
+              <a key={social.url} href={social.url} target="_blank" rel="noreferrer">
+                <i className="social-mark" style={{ background: social.color }}>
+                  <SocialIcon name={social.name} />
+                </i>
+                <span>
+                  <b>{social.name}</b>
+                  <small>{social.description}</small>
+                </span>
+                <ArrowUpRight size={17} />
+              </a>
+            ))}
+          </div>
+        </section>
 
         <p className="dashboard-foot">
           Need help? <a href="mailto:hello@devtrackacademy.com">Contact DevTrackAcademy</a> · Keep your certificate ID handy for verification.

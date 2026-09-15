@@ -9,3 +9,4 @@ preview/
 next-env.d.ts
 .DS_Store
 design.md
+amplify.yml

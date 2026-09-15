@@ -1,3 +1,5 @@
+import { SOCIALS } from "./socials";
+
 type CertificateEmail = {
   to: string;
   recipientName: string;
@@ -9,6 +11,27 @@ type CertificateEmail = {
 const INK = "#1B1F3B";
 const PAPER = "#FFF8F0";
 const ORANGE = "#FF6B35";
+
+/**
+ * Socials as a table row of coloured text links. Inline SVG and web fonts are unreliable in
+ * email clients, so the brand colour carries the recognition instead of a logo.
+ */
+function socialRow() {
+  const links = SOCIALS.map(
+    (social) =>
+      `<a href="${social.url}" style="color:${social.color};font-weight:bold;font-size:13px;text-decoration:none;white-space:nowrap;">${social.name}</a>`,
+  ).join(`<span style="color:#8A8496;font-size:13px;"> &nbsp;·&nbsp; </span>`);
+  return `<tr><td style="padding:4px 28px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAPER};border:3px solid ${INK};border-radius:14px;">
+    <tr><td style="padding:14px 16px;">
+      <p style="margin:0 0 8px;font-size:10px;letter-spacing:1.5px;font-weight:bold;color:#8A8496;">STAY CONNECTED</p>
+      <p style="margin:0;line-height:2;">${links}</p>
+      <p style="margin:8px 0 0;font-size:12px;line-height:1.5;color:#5A5668;">Announcements, doubt-solving and the next batch of student perks land here first &mdash; the GNI Workshop channel on our Discord server is the fastest way to reach us.</p>
+    </td></tr>
+  </table>
+</td></tr>
+`;
+}
 
 function template({ firstName, workshopName, certificateNumber, dashboardUrl, verifyUrl }: { firstName: string; workshopName: string; certificateNumber: string; dashboardUrl: string; verifyUrl: string }) {
   // Table-based layout with inline styles: the only markup email clients render consistently.
@@ -35,8 +58,10 @@ function template({ firstName, workshopName, certificateNumber, dashboardUrl, ve
 <tr><td style="padding:22px 28px 0;">
   <a href="${dashboardUrl}" style="display:inline-block;padding:13px 22px;background:${ORANGE};color:#ffffff;font-weight:bold;font-size:14px;text-decoration:none;border:3px solid ${INK};border-radius:14px;">View my dashboard</a>
 </td></tr>
-<tr><td style="padding:18px 28px 28px;font-size:14px;line-height:1.6;">
-  <p style="margin:0 0 14px;">From your dashboard you can download the certificate again, copy your interview platform promo code, and revisit the workshop resources.</p>
+<tr><td style="padding:18px 28px 6px;font-size:14px;line-height:1.6;">
+  <p style="margin:0;">From your dashboard you can download the certificate again, copy your interview platform promo code, and revisit the workshop resources.</p>
+</td></tr>
+${socialRow()}<tr><td style="padding:18px 28px 28px;font-size:14px;line-height:1.6;">
   <p style="margin:0;">Regards,<br/><strong>DevTrackAcademy</strong></p>
 </td></tr>
 </table>
@@ -53,6 +78,9 @@ function textVersion({ firstName, workshopName, certificateNumber, dashboardUrl 
     "",
     `Certificate ID: ${certificateNumber}`,
     `Dashboard: ${dashboardUrl}`,
+    "",
+    "Stay connected:",
+    ...SOCIALS.map((social) => `  ${social.name} (${social.description}): ${social.url}`),
     "",
     "Regards,",
     "DevTrackAcademy",
