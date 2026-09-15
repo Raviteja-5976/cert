@@ -28,6 +28,12 @@ export const SOCIALS: Social[] = [
     color: "#1B1F3B",
   },
   {
+    name: "LinkedIn",
+    description: "DevTrackAcademy · Company page",
+    url: "https://www.linkedin.com/company/devtrackacademy/",
+    color: "#0A66C2",
+  },
+  {
     name: "Reddit",
     description: "r/devtrackacademy",
     url: "https://www.reddit.com/r/devtrackacademy/",
