@@ -8,3 +8,4 @@ preview/
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+design.md

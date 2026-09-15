@@ -74,3 +74,27 @@ button.header-link { border:0; background:none; cursor:pointer; }
   .notice { flex-direction:column; gap:10px; }
 }
 .admin-table .renamed { display:block; margin-top:2px; font:600 10px "JetBrains Mono"; color:var(--orange); }
+
+/* ---- feedback responses ---- */
+.feedback-entries { display:grid; gap:18px; }
+.feedback-entry { padding:22px; border:3px solid var(--ink); border-radius:18px; background:var(--paper-pure,#fff); }
+.feedback-entry header { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:flex-start; padding-bottom:16px; border-bottom:2px solid rgba(27,31,59,.14); }
+.feedback-entry header b { display:block; font:700 17px "Space Grotesk"; }
+.feedback-entry header .mono { display:block; margin-top:3px; font:600 11px "JetBrains Mono"; color:rgba(27,31,59,.6); }
+.entry-meta { text-align:right; }
+.interest-badge { display:inline-block; padding:5px 9px; border:2px solid var(--ink); border-radius:999px; font:700 9px "JetBrains Mono"; letter-spacing:.08em; background:var(--paper-sunk); }
+.interest-badge.yes { background:var(--mint); } .interest-badge.maybe { background:var(--yellow); } .interest-badge.no { background:var(--coral); }
+.score-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 22px; padding:16px 0; border-bottom:2px solid rgba(27,31,59,.14); }
+.score-cell span { display:block; font:700 9px "JetBrains Mono"; letter-spacing:.08em; text-transform:uppercase; color:rgba(27,31,59,.62); }
+.score-cell div { display:flex; align-items:center; gap:9px; margin-top:5px; }
+.score-cell b { font:700 13px "JetBrains Mono"; }
+.score-stars { display:inline-flex; gap:2px; }
+.score-stars .on { color:var(--orange); fill:var(--orange); }
+.score-stars .off { color:rgba(27,31,59,.22); }
+.answer-list { display:grid; gap:16px; padding:18px 0 4px; }
+.answer .section-kicker { margin-bottom:6px; color:var(--ink); opacity:.65; }
+.answer p:last-child { margin:0; font-size:14px; white-space:pre-wrap; }
+.answer .no-answer { color:rgba(27,31,59,.4); font-style:italic; }
+.entry-foot { margin:14px 0 0; font:600 10px "JetBrains Mono"; letter-spacing:.08em; color:rgba(27,31,59,.45); text-transform:uppercase; }
+.empty-feedback { display:flex; align-items:center; justify-content:center; gap:8px; padding:34px; border:3px dashed rgba(27,31,59,.25); border-radius:16px; margin:0; color:rgba(27,31,59,.55); }
+@media(max-width:720px) { .score-grid { grid-template-columns:1fr; } .entry-meta { text-align:left; } }

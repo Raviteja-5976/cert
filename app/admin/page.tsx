@@ -4,17 +4,27 @@ import { SiteHeader } from "../components/site-chrome";
 import { isAdmin } from "../../lib/auth";
 import { supabaseAdmin, isSupabaseConfigured } from "../../lib/supabase/admin";
 import { StudentsTable, type AdminRow } from "./students-table";
+import { FeedbackList, type FeedbackEntry } from "./feedback-list";
 
 export const dynamic = "force-dynamic";
 
 type FeedbackRow = {
+  id: string;
   student_id: string;
   workshop_rating: number;
   understanding_rating: number;
   implementation_rating: number;
   resource_person_rating: number;
+  liked: string;
+  disliked: string | null;
+  improvements: string;
   internship_interest: string;
+  created_at: string;
 };
+
+type RatingField = "workshop_rating" | "understanding_rating" | "implementation_rating" | "resource_person_rating";
+
+type StudentRow = { id: string; name: string; certificate_name: string | null; email: string; workshops: { name: string } | null };
 
 export default async function AdminPage() {
   if (!isSupabaseConfigured()) redirect("/certificate");
@@ -23,12 +33,18 @@ export default async function AdminPage() {
   const db = supabaseAdmin();
   const [{ data: students }, { data: feedback }, { data: claims }] = await Promise.all([
     db.from("students").select("id,name,certificate_name,email,workshops(name)").eq("eligible", true).order("name"),
-    db.from("feedback").select("student_id,workshop_rating,understanding_rating,implementation_rating,resource_person_rating,internship_interest"),
+    db
+      .from("feedback")
+      .select("id,student_id,workshop_rating,understanding_rating,implementation_rating,resource_person_rating,liked,disliked,improvements,internship_interest,created_at")
+      .order("created_at", { ascending: false }),
     db.from("certificate_claims").select("student_id,certificate_number,email_sent,claimed_at"),
   ]);
 
   const feedbackRows = (feedback || []) as FeedbackRow[];
   const feedbackByStudent = new Set(feedbackRows.map((row) => row.student_id));
+  // The roster is already fetched for the table below; reuse it so the responses can name
+  // their author without a second join.
+  const studentById = new Map(((students || []) as unknown as StudentRow[]).map((row) => [row.id, row]));
   const claimByStudent = new Map((claims || []).map((row) => [row.student_id, row]));
 
   const rows: AdminRow[] = (students || []).map((student) => {
@@ -47,15 +63,39 @@ export default async function AdminPage() {
     };
   });
 
+  // A response whose student row is missing (deleted or no longer eligible) still counts in the
+  // analytics above, but has no name to show, so it is left out of the list.
+  const entries: FeedbackEntry[] = feedbackRows.flatMap((row) => {
+    const student = studentById.get(row.student_id);
+    if (!student) return [];
+    return [
+      {
+        id: row.id,
+        name: student.certificate_name?.trim() || student.name,
+        email: student.email,
+        workshop: student.workshops?.name || "—",
+        workshopRating: row.workshop_rating,
+        understandingRating: row.understanding_rating,
+        implementationRating: row.implementation_rating,
+        resourcePersonRating: row.resource_person_rating,
+        liked: row.liked,
+        disliked: row.disliked,
+        improvements: row.improvements,
+        internshipInterest: row.internship_interest,
+        createdAt: row.created_at,
+      },
+    ];
+  });
+
   const total = rows.length;
   const claimed = rows.filter((row) => row.certificateNumber).length;
   const emailsSent = rows.filter((row) => row.certificateNumber && row.emailSent).length;
   const emailFailed = claimed - emailsSent;
 
-  const average = (field: keyof Omit<FeedbackRow, "student_id" | "internship_interest">) =>
+  const average = (field: RatingField) =>
     feedbackRows.length ? (feedbackRows.reduce((sum, row) => sum + row[field], 0) / feedbackRows.length).toFixed(1) : "—";
   const interest = (value: string) => feedbackRows.filter((row) => row.internship_interest === value).length;
-  const distribution = (field: keyof Omit<FeedbackRow, "student_id" | "internship_interest">) =>
+  const distribution = (field: RatingField) =>
     [5, 4, 3, 2, 1].map((score) => ({ score, count: feedbackRows.filter((row) => row[field] === score).length }));
 
   const stats = [
@@ -140,6 +180,8 @@ export default async function AdminPage() {
         </div>
 
         <StudentsTable rows={rows} />
+
+        <FeedbackList entries={entries} />
       </section>
     </main>
   );

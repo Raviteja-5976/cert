@@ -24,7 +24,8 @@ const FILTERS: Array<{ key: Filter; label: string }> = [
   { key: "failed", label: "Email failed" },
 ];
 
-function maskEmail(email: string) {
+/** Admin views show a shortened address: enough to identify a student, not a scrapeable list. */
+export function maskEmail(email: string) {
   const [local, domain] = email.split("@");
   if (!domain) return email;
   const visible = local.slice(0, 2);
